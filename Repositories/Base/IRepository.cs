@@ -2,12 +2,12 @@
 {
     public interface IRepository<TEntity> where TEntity : class
     {
-        List<TEntity> GetAll();
+        ICollection<TEntity> GetAll();
         TEntity Get(int id);
         TEntity Insert(TEntity entity);
         TEntity Update(TEntity entity);
         void Delete(int id);
-        Task<List<TEntity>> GetAllAsync();
+        Task<ICollection<TEntity>> GetAllAsync();
         Task<TEntity> GetAsync(int id);
         Task<TEntity> InsertAsync(TEntity entity);
         Task<TEntity> UpdateAsync(TEntity entity);

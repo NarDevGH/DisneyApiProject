@@ -8,7 +8,7 @@ namespace DisneyApi.Models
 
         public string? ImageUrl { get; set; }
 
-        [Required] public string Tittle { get; set; }
+        [Required] public string Title { get; set; }
 
         public DateTime? CreationDate { get; set; }
 

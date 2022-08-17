@@ -11,11 +11,11 @@ namespace DisneyApi.Controllers
     [Authorize]
     public class CharactersController : ControllerBase
     {
-        private readonly DisneyService<Character> _disneyCharacters_Service;
+        private readonly DisneyService<Character> _disneyCharactersService;
 
         public CharactersController(DisneyService<Character> disneyCharacters_Service)
         {
-            _disneyCharacters_Service = disneyCharacters_Service;
+            _disneyCharactersService = disneyCharacters_Service;
         }
 
 
@@ -23,7 +23,7 @@ namespace DisneyApi.Controllers
         [HttpGet]
         public async Task<ActionResult<List<CharactersDto>>> QueryCharacters([FromQuery] int? id, [FromQuery]  string? name, [FromQuery] int? age, [FromQuery] float? weight, [FromQuery] int? movieSerie_Id)
         {
-            var characters = await _disneyCharacters_Service.GetAllAsync();
+            var characters = await _disneyCharactersService.GetAllAsync();
         
             if (characters is null)
             {
@@ -37,19 +37,19 @@ namespace DisneyApi.Controllers
         
             if (name is not null)
             {
-                characters = characters.Where(x => x.Name == name).ToList();
+                characters = characters.Where(x => x.Name == name) as ICollection<Character>;
             }
             if (age is not null)
             {
-                characters = characters.Where(x => x.Age == age).ToList();
+                characters = characters.Where(x => x.Age == age) as ICollection<Character>;
             }
             if (weight is not null)
             {
-                characters = characters.Where(x => x.Weight == weight).ToList();
+                characters = characters.Where(x => x.Weight == weight) as ICollection<Character>;
             }
             if (movieSerie_Id is not null)
             {
-                characters = characters.Where(x => x.MoviesAndSeries.Any(y => y.MovieSerie_Id == movieSerie_Id)).ToList();
+                characters = characters.Where(x => x.MoviesAndSeries.Any(y => y.MovieSerie_Id == movieSerie_Id)) as ICollection<Character>;
             }
         
             return characters.Count > 0 ? characters.Select(x => x.asCharactersDto()).ToList() : NoContent();
@@ -63,9 +63,7 @@ namespace DisneyApi.Controllers
                 return BadRequest();
             }
 
-            await _disneyCharacters_Service.InsertAsync(character);
-
-            return Ok();
+            return Ok(await _disneyCharactersService.InsertAsync(character));
         }
 
         [HttpPost]
@@ -76,25 +74,25 @@ namespace DisneyApi.Controllers
                 return BadRequest();
             }
 
-            return await _disneyCharacters_Service.InsertAsync(character);
+            return await CharacterExists(character.Character_Id) ? 
+                await _disneyCharactersService.UpdateAsync(character) : 
+                await _disneyCharactersService.InsertAsync(character);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCharacter(int id)
         {
-            if (await _disneyCharacters_Service.GetAsync(id) is null)
+            if (await _disneyCharactersService.GetAsync(id) is null)
             {
                 return BadRequest();
             }
 
-            await _disneyCharacters_Service.DeleteAsync(id);
-
-            return NoContent();
+            return Ok(_disneyCharactersService.DeleteAsync(id));
         }
 
         private async Task<bool> CharacterExists(int id)
         {
-            return ( await _disneyCharacters_Service.GetAsync(id) ) is not null;
+            return ( await _disneyCharactersService.GetAsync(id) ) is not null;
         }
     }
 }

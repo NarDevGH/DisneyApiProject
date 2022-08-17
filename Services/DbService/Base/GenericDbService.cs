@@ -4,7 +4,7 @@ namespace DisneyApi.Services.DbService.Base
 {
     public class GenericDbService<TEntity, TRepository> : IGenericDbService<TEntity> where TEntity : class where TRepository : IRepository<TEntity>
     {
-        TRepository _repository;
+        private readonly TRepository _repository;
 
         public GenericDbService(TRepository repository)
         {
@@ -26,12 +26,12 @@ namespace DisneyApi.Services.DbService.Base
             return _repository.Get(id);
         }
 
-        public List<TEntity> GetAll()
+        public ICollection<TEntity> GetAll()
         {
             return _repository.GetAll();
         }
 
-        public async Task<List<TEntity>> GetAllAsync()
+        public async Task<ICollection<TEntity>> GetAllAsync()
         {
             return await _repository.GetAllAsync();
         }

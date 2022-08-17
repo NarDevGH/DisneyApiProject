@@ -65,7 +65,7 @@ namespace DisneyApi.Repositories.Base
             }
         }
 
-        public List<TEntity> GetAll()
+        public ICollection<TEntity> GetAll()
         {
             try
             {
@@ -77,7 +77,7 @@ namespace DisneyApi.Repositories.Base
             }
         }
 
-        public async Task<List<TEntity>> GetAllAsync()
+        public async Task<ICollection<TEntity>> GetAllAsync()
         {
             try
             {
