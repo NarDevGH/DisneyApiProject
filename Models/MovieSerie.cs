@@ -8,11 +8,11 @@ namespace DisneyApi.Models
 
         public string? ImageUrl { get; set; }
 
-        public string? Tittle { get; set; }
+        [Required] public string Tittle { get; set; }
 
         public DateTime? CreationDate { get; set; }
 
-        [Range(1,5)] public int Rate { get; set; }
+        [Range(1,5)] public int? Rate { get; set; }
 
         public ICollection<Character>? Characters { get; set; }
     }

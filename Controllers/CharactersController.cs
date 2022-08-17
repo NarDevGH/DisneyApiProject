@@ -1,10 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using DisneyApi.Models;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using DisneyApi.Services.DbService;
-using Microsoft.AspNetCore.Mvc.ActionConstraints;
-using Microsoft.Extensions.Primitives;
-using Microsoft.AspNetCore.Mvc.Abstractions;
-using Microsoft.AspNetCore.Authorization;
+using DisneyApi.Models;
+using DisneyApiProject.Dto;
 
 namespace DisneyApi.Controllers
 {
@@ -23,9 +21,9 @@ namespace DisneyApi.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult<List<Character>>> QueryCharacters([FromQuery] int? id, [FromQuery]  string? name, [FromQuery] int? age, [FromQuery] float? weight, [FromQuery] int? movieSerie_Id)
+        public async Task<ActionResult<List<CharactersDto>>> QueryCharacters([FromQuery] int? id, [FromQuery]  string? name, [FromQuery] int? age, [FromQuery] float? weight, [FromQuery] int? movieSerie_Id)
         {
-            var characters = (await _disneyCharacters_Service.GetAllAsync()).ToList();
+            var characters = await _disneyCharacters_Service.GetAllAsync();
         
             if (characters is null)
             {
@@ -34,7 +32,7 @@ namespace DisneyApi.Controllers
             
             if (id is not null)
             {
-                return await CharacterExists((int)id) ? characters.Where(x => x.Character_Id == id).ToList() : NoContent();
+                return await CharacterExists((int)id) ? characters.Where(x => x.Character_Id == id).Select(x => x.asCharactersDto()).ToList() : NoContent();
             }
         
             if (name is not null)
@@ -54,7 +52,7 @@ namespace DisneyApi.Controllers
                 characters = characters.Where(x => x.MoviesAndSeries.Any(y => y.MovieSerie_Id == movieSerie_Id)).ToList();
             }
         
-            return characters.Count() > 0 ? characters : NoContent();
+            return characters.Count > 0 ? characters.Select(x => x.asCharactersDto()).ToList() : NoContent();
         }
 
         [HttpPut]

@@ -62,7 +62,15 @@ builder.Services.AddScoped<DisneyRepository<Character>>();
 
 builder.Services.AddScoped<DisneyService<Character>>();
 
-//              Autentificacion:
+builder.Services.AddScoped<DisneyRepository<Genre>>();
+
+builder.Services.AddScoped<DisneyService<Genre>>();
+
+builder.Services.AddScoped<DisneyRepository<MovieSerie>>();
+
+builder.Services.AddScoped<DisneyService<MovieSerie>>();
+
+//              Authentication:
 
 // DI to implement the Login system
 builder.Services.AddIdentity<User, IdentityRole>()
@@ -85,7 +93,7 @@ builder.Services.AddAuthentication(option =>
     {
         ValidateIssuer = true,
         ValidateAudience = true,
-        ValidAudience = "https://localhost:7158", // my port
+        ValidAudience = "https://localhost:7158",
         ValidIssuer = "https://localhost:7158",
         IssuerSigningKey =
             new SymmetricSecurityKey(Encoding.UTF8.GetBytes("JWTRefreshTokenHIGHsecuredPasswordVVVp1OH7Xzyr"))
@@ -104,7 +112,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// AÑADIR app.UseAuthentication(); PORQUE SINO TIRA 401 A TODO LO QUE REQUIERA AUTORIZACION AUN CARGANDO BIEN EL TOQUEN.
+// Important    
+//    \/ 
 app.UseAuthentication();
 
 app.UseAuthorization();

@@ -6,7 +6,7 @@ namespace DisneyApi.Models
     {
         [Key] public int Genre_Id { get; set; }
 
-        public string? Name { get; set; }
+        [Required] public string Name { get; set; }
 
         public string? ImageUrl { get; set; }
 

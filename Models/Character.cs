@@ -8,11 +8,11 @@ namespace DisneyApi.Models
 
         public string? ImageUrl { get; set; }
 
-        public string? Name { get; set; }
+        [Required] public string Name { get; set; }
 
-        [Range(0,int.MaxValue)] public int Age { get; set; }
+        [Range(0,int.MaxValue)] public int? Age { get; set; }
 
-        [Range(0,float.MaxValue)] public float Weight { get; set; }
+        [Range(0,float.MaxValue)] public float? Weight { get; set; }
 
         public string? History { get; set; }
 
